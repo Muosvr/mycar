@@ -58,7 +58,7 @@ def drive(cfg, model_path=None, use_joystick=False, use_chaos=False):
         ctr = SerialController()
 
     V.add(ctr,
-          outputs=['user/angle', 'user/throttle'],
+          outputs=['user/angle', 'user/throttle', 'user/mode', 'recording'],
           threaded=True)
 
     # See if we should even run the pilot module.

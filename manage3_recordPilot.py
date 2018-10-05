@@ -117,7 +117,6 @@ def drive(cfg, model_path=None, use_joystick=False, use_chaos=False):
         def __init__(self):
             self.lastAngle = 0.0
             self.muteCounter = 0
-            self.duration = 3
 
         def run(self, angle):
             tmp_angle = float(angle)
@@ -128,11 +127,7 @@ def drive(cfg, model_path=None, use_joystick=False, use_chaos=False):
                     print("filter applied")
                     angle = self.lastAngle*0.8 + angle*0.2
                     filtered = True
-                    if self.duration <= 0:
-                        self.muteCounter = 0
-                        self.duration = 3
-                    else:
-                        self.duration -= 1
+                    self.muteCounter = 0
                 else:
                     self.lastAngle = tmp_angle
             else:

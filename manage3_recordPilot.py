@@ -81,31 +81,6 @@ def drive(cfg, model_path=None, use_joystick=False, use_chaos=False):
               outputs=['pilot/angle', 'pilot/throttle'],
               run_condition='run_pilot')
 
-    #Filter out outlier pilot angle predictions
-
-    class OutlierFilter:
-        def __init__(self):
-            self.lastAngle = 0.0
-            self.muteCounter = 0
-
-        def run(self, pilot_angle):
-            tmp_angle = float(pilot_angle)
-            self.muteCounter += 1
-            if self.muteCounter >= 2:
-                if abs(tmp_angle - self.lastAngle) >= 0.5:
-                    print("filter applied")
-                    pilot_angle = self.lastAngle
-                    self.muteCounter = 0
-                else:
-                    self.lastAngle = tmp_angle
-            else:
-                self.lastAngle = tmp_angle
-            return pilot_angle
-
-    outlier_filter = OutlierFilter()
-    V.add(outlier_filter, inputs=['pilot/angle'],
-                          outputs=['pilot/angle'],
-                          run_condition='run_pilot')
 
     # Choose what inputs should change the car.
     def drive_mode(mode,
@@ -137,12 +112,39 @@ def drive(cfg, model_path=None, use_joystick=False, use_chaos=False):
                            zero_pulse=cfg.THROTTLE_STOPPED_PWM,
                            min_pulse=cfg.THROTTLE_REVERSE_PWM)
 
+    #Filter out outlier angle predictions
+    class OutlierFilter:
+        def __init__(self):
+            self.lastAngle = 0.0
+            self.muteCounter = 0
+
+        def run(self, angle):
+            tmp_angle = float(angle)
+            filtered = False
+            self.muteCounter += 1
+            if self.muteCounter >= 5:
+                if abs(tmp_angle - self.lastAngle) >= 0.5:
+                    print("filter applied")
+                    angle = self.lastAngle*0.8 + angle*0.2
+                    filtered = True
+                    self.muteCounter = 0
+                else:
+                    self.lastAngle = tmp_angle
+            else:
+                self.lastAngle = tmp_angle
+            return angle, filtered
+
+    outlier_filter = OutlierFilter()
+    V.add(outlier_filter, inputs=['angle'],
+                          outputs=['angle', 'filtered'],
+                          run_condition='run_pilot')
+
     V.add(steering, inputs=['angle'])
     V.add(throttle, inputs=['throttle'])
 
     # add tub to save data
-    inputs = ['cam/image_array', 'pilot/angle', 'throttle', 'user/mode', 'timestamp']
-    types = ['image_array', 'float', 'float', 'str', 'str']
+    inputs = ['cam/image_array', 'pilot/angle', 'angle', 'throttle', 'user/mode', 'timestamp', 'filtered']
+    types = ['image_array', 'float', 'float', 'float', 'str', 'str', 'boolean']
 
     #multiple tubs
     #th = TubHandler(path=cfg.DATA_PATH)

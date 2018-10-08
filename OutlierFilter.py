@@ -6,7 +6,7 @@ class OutlierFilter:
     def run(self, pilot_angle):
         tmp_angle = float(pilot_angle)
         self.muteCounter += 1
-        if self.muteCounter >= 10:
+        if self.muteCounter >= 2:
             if abs(tmp_angle - self.lastAngle) >= 0.5:
                 pilot_angle = self.lastAngle
                 self.muteCounter = 0

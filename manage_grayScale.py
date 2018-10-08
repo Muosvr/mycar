@@ -18,6 +18,7 @@ from docopt import docopt
 import donkeycar as dk
 import time
 from PIL import Image
+import numpy as np
 
 #import parts
 from donkeycar.parts.camera import PiCamera
@@ -93,7 +94,7 @@ def drive(cfg, model_path=None, use_joystick=False, use_chaos=False):
     def gray_scale(image_array):
         img = Image.fromarray(image_array)
         img = img.convert("L")
-        img_array = np.array(img)[None]
+        img_array = np.array(img).reshape(120, 160, 1)
         return img_array
 
     gray_scale_part = Lambda(gray_scale)

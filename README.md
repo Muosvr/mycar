@@ -1,5 +1,5 @@
 ### Link to the officia Donkey Car site where you can find its dcumentation and repo:
-*[Donkey Car](http://www.donkeycar.com/)
+* [Donkey Car](http://www.donkeycar.com/)
 
 ### In these Medium posts I wrote about my process and progress in this project:
 

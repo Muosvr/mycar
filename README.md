@@ -1,3 +1,6 @@
+### Link to the officia Donkey Car site where you can find its dcumentation and repo:
+*[Donkey Car](http://www.donkeycar.com/)
+
 ### In these Medium posts I wrote about my process and progress in this project:
 
 * [Build a Self-driving Car in Two Days and Learn About Deep Learning — Part 1](https://medium.com/@jasonwu_49390/how-to-build-a-self-driving-car-in-two-days-and-learn-about-deep-learning-8b8826baad4b)
